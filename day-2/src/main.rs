@@ -24,15 +24,13 @@ fn solve_part2(input: Vec<(&str, usize)>) -> usize {
 }
 
 fn prepare_input<'a>() -> Vec<(&'a str, usize)> {
-    let input: Vec<(&'a str, usize)> = include_str!("../input.txt")
+    include_str!("../input.txt")
         .lines()
         .map(|line| -> (&str, usize) {
             let (order, value) = line.split_once(' ').unwrap();
             (order, value.parse::<usize>().unwrap())
         })
-        .collect();
-
-    input
+        .collect()
 }
 
 fn main() {
