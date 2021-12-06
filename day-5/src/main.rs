@@ -1,6 +1,6 @@
 use std::{collections::HashMap, convert::From};
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Clone, Copy)]
 struct Point {
     x: i32,
     y: i32,
@@ -15,6 +15,13 @@ impl From<&str> for Point {
     }
 }
 
+pub enum Dir {
+    Horizontal,
+    Vertical,
+    Diagonal,
+    None,
+}
+
 #[derive(Debug, Clone)]
 struct CoordsMap {
     coords: HashMap<(i32, i32), i32>,
@@ -27,33 +34,49 @@ impl CoordsMap {
         }
     }
 
+    pub fn direction(&self, min: Point, max: Point, calc_diagonal: bool) -> Dir {
+        if min.x == max.x {
+            Dir::Vertical
+        } else if min.y == max.y {
+            Dir::Horizontal
+        } else if calc_diagonal {
+            Dir::Diagonal
+        } else {
+            Dir::None
+        }
+    }
+
+    pub fn add_point(&mut self, point: (i32, i32)) {
+        self.coords
+            .entry(point)
+            .and_modify(|e| *e += 1)
+            .or_insert(1);
+    }
+
     fn add(&mut self, p1: Point, p2: Point, calc_diagonal: bool) {
         let (min, max) = if p1 <= p2 { (p1, p2) } else { (p2, p1) };
-        if min.x == max.x {
-            for y in min.y..=max.y {
-                self.coords
-                    .entry((min.x, y))
-                    .and_modify(|i| *i += 1)
-                    .or_insert(1);
-            }
-        } else if min.y == max.y {
-            for x in min.x..=max.x {
-                self.coords
-                    .entry((x, min.y))
-                    .and_modify(|i| *i += 1)
-                    .or_insert(1);
-            }
-        } else if calc_diagonal {
-            let inc = if min.y >= max.y { -1 } else { 1 };
-            let mut y = min.y;
 
-            for x in min.x..=max.x {
-                self.coords
-                    .entry((x, y))
-                    .and_modify(|i| *i += 1)
-                    .or_insert(1);
-                y += inc;
+        match self.direction(min, max, calc_diagonal) {
+            Dir::Horizontal => {
+                for x in min.x..=max.x {
+                    self.add_point((x, min.y));
+                }
             }
+            Dir::Vertical => {
+                for y in min.y..=max.y {
+                    self.add_point((min.x, y));
+                }
+            }
+            Dir::Diagonal => {
+                let inc = if min.y >= max.y { -1 } else { 1 };
+                let mut y = min.y;
+
+                for x in min.x..=max.x {
+                    self.add_point((x, y));
+                    y += inc;
+                }
+            }
+            Dir::None => (),
         }
     }
 

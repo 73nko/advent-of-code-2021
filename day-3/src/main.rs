@@ -22,9 +22,9 @@ fn prepare_input1() -> Vec<i32> {
         .fold(vec![0; 12], |mut acc, bytes| {
             for (i, x) in bytes.iter().enumerate() {
                 if *x == 1 {
-                    acc[i] = acc[i] + 1;
+                    acc[i] += 1;
                 } else {
-                    acc[i] = acc[i] - 1;
+                    acc[i] -= 1;
                 }
             }
             acc
