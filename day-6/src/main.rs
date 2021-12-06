@@ -1,23 +1,31 @@
-fn solve_part1(input: Vec<i32>) -> i32 {
-    0
+fn solve_parts(input: &[usize; 9], days: i32) -> usize {
+    let mut count = input.clone();
+
+    for _day in 0..days {
+        count.rotate_left(1);
+        count[6] += count[8];
+    }
+    count.iter().sum()
 }
 
-fn solve_part2(input: Vec<i32>) -> i32 {
-    0
-}
+fn prepare_input() -> [usize; 9] {
+    let mut counts = [0 as usize; 9];
 
-fn prepare_input() -> Vec<i32> {
     include_str!("../input.txt")
-        .lines()
-        .map(|s| s.parse().unwrap())
-        .collect()
+        .split(',')
+        .map(|s| s.parse::<usize>().unwrap())
+        .for_each(|c: usize| {
+            counts[c] += 1;
+        });
+
+    counts
 }
 
 fn main() {
     let input = prepare_input();
 
-    let solution1 = solve_part1(&input);
-    let solution2 = solve_part2(&input);
+    let solution1 = solve_parts(&input, 80);
+    let solution2 = solve_parts(&input, 256);
 
     println!("PART 1: {}", solution1);
     println!("PART 2: {}", solution2);
