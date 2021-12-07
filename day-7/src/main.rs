@@ -20,7 +20,10 @@ fn solve_part2(input: &Vec<i32>) -> usize {
     let crabs = input.clone();
     let average: f64 = crabs.iter().map(|c| *c as f64).sum::<f64>() / crabs.len() as f64;
 
-    calc(average.floor() as i32, &crabs)
+    let with_ceil = calc(average.ceil() as i32, &crabs);
+    let with_floor = calc(average.floor() as i32, &crabs);
+
+    with_ceil.min(with_floor)
 }
 
 fn prepare_input() -> Vec<i32> {
