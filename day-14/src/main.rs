@@ -1,6 +1,7 @@
-use std::{collections::HashMap, fmt::Write};
-
 mod counter;
+
+use counter::Counter;
+use std::{collections::HashMap, fmt::Write};
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 struct Element(char, char);
@@ -27,7 +28,7 @@ impl From<&[u8]> for Element {
 
 struct Polymer {
     initial: String,
-    counter: counter::Counter<Element>,
+    counter: Counter<Element>,
     rules: HashMap<Element, char>,
 }
 
@@ -59,12 +60,12 @@ impl Polymer {
             .collect();
     }
 
-    fn apply(&mut self, count: usize) -> counter::Counter<char> {
+    fn apply(&mut self, count: usize) -> Counter<char> {
         for _ in 0..count {
             self.step();
         }
 
-        let mut result: counter::Counter<char> = self
+        let mut result: Counter<char> = self
             .counter
             .iter()
             .map(|(el, count)| (el.0, *count))

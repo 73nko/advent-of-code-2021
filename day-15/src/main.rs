@@ -1,8 +1,7 @@
-use std::collections::BinaryHeap;
+mod grid;
 
 use grid::{Direction, Grid};
-
-mod grid;
+use std::collections::BinaryHeap;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 struct NodeWithCost {
